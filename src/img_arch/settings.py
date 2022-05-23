@@ -7,14 +7,14 @@ from img_arch.extractors import LinkExtractor
 BASE_DIR = Path(__file__).parent
 
 USER_AGENT = "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36" 
-DUMPS_DIR = BASE_DIR / "Downloads"
+DUMPS_DIR = Path().home() / "Pictures"
 
 DOWNLOAD_DELAY = 1
 RETRIES = 2 # first one + 2
 
 # thread/12323414
 ThreadExtractor = LinkExtractor(
-    allow=r"thread\/[0-9]+$",
+    allow=r"thread\/[0-9]+",
 )
 TaggerImg = LinkExtractor(
         allow=r"static\/img\/",
@@ -24,6 +24,9 @@ TaggerImg = LinkExtractor(
 WarosuImg = LinkExtractor(
         allow=r"i\.warosu\.org", # image subdomain
 )
+AliceImg = LinkExtractor(
+        allow=r"s1.alice.al/w/image", # image subdomain
+)
 
 ARCHIVES = {
     "tagger": {
@@ -31,18 +34,24 @@ ARCHIVES = {
         "url": "http://localhost:5050/",
         "pagination": "&page=",
         "cookies": {},
-#        "selector": "//img[@class='image']/@src",
         "filter": None,
         "extractor": TaggerImg,
     },
     "warosu": {
-        # (domain, data_sd1,data_sd2, ..., data_sdn)
         "url": "https://warosu.org/",
         "search": "?task=search2&search_op=op&search_ord=new&search_res=op&search_subject=",
         "pagination": "&offset=",
-        "cookies": {"cf_clearance":"vic0WY8YfCrrcq8IXluyIzNwmYkrS_ffV6GpzxGipFQ-1653234697-0-150"},
+        "cookies": {"cf_clearance":"elf7L6dSNLaTZ_nwsx9tg.sxnakquiiSkE3Dv8m_1D0-1653332047-0-150"},
         "filter": ThreadExtractor,
         "extractor": WarosuImg,
+    },
+    "alice": {
+        "url": "https://archive.alice.al/",
+        "search": "search/subject/",
+        "pagination": "/page/",
+        "cookies": {},
+        "filter": ThreadExtractor,
+        "extractor": AliceImg,
     },
 }
 

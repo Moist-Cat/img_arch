@@ -17,7 +17,6 @@ class EndOfCatalog(Exception):
 
 def check_errors(request):
     """Properly handles HTTP and other comms related errors."""
-    @wraps(request)
     def inner_func(cls, method, url, **kwargs):
         request_success = False
         retries = 0
@@ -102,8 +101,9 @@ class Archive(requests.Session):
         self.page = page + self.added_pages
         self.logger_file.info("NOW SCRAPING PAGE: %s", page)
 
-        self.logger.info(f"Searching in {board}. Query: {query}. Page: {self.page}")
+
         search_url = self.base_url + board + "/" + self.search_params + query + self.pagination
+        self.logger.info(f"Searching in {board}. Query: {query}. Page: {self.page}. URL: {search_url}")
         response = self.get(search_url + str(page))
 
         links: Generator = self.filter.extract_links(
@@ -176,7 +176,10 @@ class Tagger(Archive):
 class Warosu(Archive):
     """Warosu archiver. It depends on a cloudfare token"""
 
+class Alice(Archive):
+    """Alice archive for /w/. Search is kinda weird (It takes url kwargs like /this/)"""
+
 if __name__ == "__main__":
-    c = Warosu()
-    c.search_threads(board="jp", query="remilia")
+    w = Alice()
+    w.search_threads(board="w", query="touhou")
 
