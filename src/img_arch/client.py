@@ -146,10 +146,15 @@ class Archive(requests.Session):
         self.logger.info(f"Saving image {image}")
         name = image.split("/")[-1]
         response = self.get(image)
-
-        with open(settings.DUMPS_DIR / name, "w+b") as file:
-            file.write(response.content)
-        self.logger.info(f"Saved image {name}")
+        if not response.ok:
+            return None
+        
+        if settings.STORAGE == "file":
+            with open(settings.STORAGE_DIR / name, "w+b") as file:
+                file.write(response.content)
+            self.logger.info(f"Saved image {name}")
+            return None
+        return response.content # send the raw bytes for further processing
 
     def next_page(self, val):
         """
@@ -187,5 +192,4 @@ if __name__ == "__main__":
     
     archive = eval(archive)()
     assert len(args) < 4, "too many args"
-    print(args)
     archive.search_threads(*args)

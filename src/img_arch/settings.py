@@ -7,10 +7,12 @@ from img_arch.extractors import LinkExtractor
 BASE_DIR = Path(__file__).parent
 
 USER_AGENT = "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36" 
-DUMPS_DIR = Path().home() / "Pictures"
+STORAGE_DIR = Path().home() / "Pictures"
 
 DOWNLOAD_DELAY = 1
 RETRIES = 2 # first one + 2
+
+STORAGE = "file"
 
 # thread/12323414
 ThreadExtractor = LinkExtractor(
