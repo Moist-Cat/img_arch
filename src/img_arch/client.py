@@ -12,6 +12,8 @@ from img_arch.writelogs import logged
 from img_arch.extractors import LinkExtractor
 
 
+__all__ = ("Warosu", "Rozen")
+
 class EndOfCatalog(Exception):
     """Finished the search"""
 
@@ -174,12 +176,16 @@ class Tagger(Archive):
         self.search_threads(board, query, self.page) # pylint: disable=E1121
 
 class Warosu(Archive):
-    """Warosu archiver. It depends on a cloudfare token"""
+    """Warosu archive. It depends on a cloudfare token"""
 
-class Alice(Archive):
-    """Alice archive for /w/. Search is kinda weird (It takes url kwargs like /this/)"""
+class Rozen(Archive):
+    """Rozen archive for /w/. Search is kinda weird (It takes url kwargs like /this/)"""
 
 if __name__ == "__main__":
-    w = Alice()
-    w.search_threads(board="w", query="touhou")
-
+    import sys
+    archive, args = sys.argv[1].capitalize(), sys.argv[2:]
+    
+    archive = eval(archive)()
+    assert len(args) < 4, "too many args"
+    print(args)
+    archive.search_threads(*args)

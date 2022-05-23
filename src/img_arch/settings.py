@@ -45,7 +45,7 @@ ARCHIVES = {
         "filter": ThreadExtractor,
         "extractor": WarosuImg,
     },
-    "alice": {
+    "rozen": {
         "url": "https://archive.alice.al/",
         "search": "search/subject/",
         "pagination": "/page/",

@@ -15,6 +15,9 @@ def normalize_link(base_url: str, link: str) -> Union[str, None]:
     http     -- regular link   -- we don't do anything
     [link]   -- relative link  -- same as an absolute link
     """
+    pieces = link.split("#")
+    assert len(pieces) < 3, link
+    link = pieces[0]
     if link.startswith("//"):
         # consistency between http and https sites
         # because this i
@@ -47,7 +50,7 @@ class LinkExtractor:
     def extract_links(self, base_url: str, response: Response) -> Generator:
         """Returns full links from the response body."""
         soup = bs(response.text, "lxml")
-        for img in soup.find_all(self.tag, **{self.attr: self.pass_filters}):
+        for img in set(soup.find_all(self.tag, **{self.attr: self.pass_filters})):
             if self.attr in img.attrs:
                 src = img.attrs[self.attr]
             else:
